@@ -7,18 +7,12 @@ import { RootState } from '../store';
 import { reorderContent, appendContent, incrementPage } from '../store/slices/contentSlice';
 import DraggableContentCard from './DraggableContentCard';
 import { toggleFavorite } from '../store/slices/userPreferencesSlice';
-import { useInView } from 'react-intersection-observer';
 
 const InfiniteScrollContent: React.FC = () => {
   const dispatch = useDispatch();
   const { items, hasMore, loading } = useSelector((state: RootState) => state.content);
   const { favoriteItems } = useSelector((state: RootState) => state.userPreferences);
   
-  const { ref: loadMoreRef, inView } = useInView({
-    threshold: 0,
-    triggerOnce: false,
-  });
-
   const loadMoreContent = useCallback(() => {
     if (!loading && hasMore) {
       // Simulate loading more content
@@ -28,10 +22,9 @@ const InfiniteScrollContent: React.FC = () => {
   }, [loading, hasMore, dispatch]);
 
   useEffect(() => {
-    if (inView) {
-      loadMoreContent();
-    }
-  }, [inView, loadMoreContent]);
+    // Load initial content
+    loadMoreContent();
+  }, []);
 
   const handleDragEnd = (result: DropResult) => {
     if (!result.destination) return;
@@ -67,7 +60,7 @@ const InfiniteScrollContent: React.FC = () => {
             {provided.placeholder}
             
             {/* Load more trigger */}
-            <div ref={loadMoreRef} className="col-span-full h-20 flex items-center justify-center">
+            <div className="col-span-full h-20 flex items-center justify-center">
               {loading && (
                 <motion.div
                   animate={{ rotate: 360 }}
