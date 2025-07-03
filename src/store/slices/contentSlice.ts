@@ -36,18 +36,25 @@ const contentSlice = createSlice({
   reducers: {
     setContent: (state, action: PayloadAction<ContentItem[]>) => {
       state.items = action.payload;
+      state.loading = false;
     },
     appendContent: (state, action: PayloadAction<ContentItem[]>) => {
       state.items = [...state.items, ...action.payload];
+      state.loading = false;
     },
     setLoading: (state, action: PayloadAction<boolean>) => {
       state.loading = action.payload;
     },
     setError: (state, action: PayloadAction<string | null>) => {
       state.error = action.payload;
+      state.loading = false;
     },
     incrementPage: (state) => {
       state.currentPage += 1;
+      // Stop loading after 5 pages for demo
+      if (state.currentPage > 5) {
+        state.hasMore = false;
+      }
     },
     setHasMore: (state, action: PayloadAction<boolean>) => {
       state.hasMore = action.payload;
@@ -58,6 +65,13 @@ const contentSlice = createSlice({
       const [removed] = result.splice(startIndex, 1);
       result.splice(endIndex, 0, removed);
       state.items = result;
+    },
+    resetContent: (state) => {
+      state.items = [];
+      state.currentPage = 1;
+      state.hasMore = true;
+      state.loading = false;
+      state.error = null;
     },
   },
 });
@@ -70,6 +84,7 @@ export const {
   incrementPage,
   setHasMore,
   reorderContent,
+  resetContent,
 } = contentSlice.actions;
 
 export default contentSlice.reducer;
