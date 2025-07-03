@@ -1,7 +1,7 @@
 
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 
-interface NewsArticle {
+export interface NewsArticle {
   id: string;
   title: string;
   description: string;
@@ -14,7 +14,7 @@ interface NewsArticle {
   category: string;
 }
 
-interface Movie {
+export interface Movie {
   id: number;
   title: string;
   overview: string;
@@ -24,7 +24,7 @@ interface Movie {
   genre_ids: number[];
 }
 
-interface SocialPost {
+export interface SocialPost {
   id: string;
   text: string;
   user: {
@@ -57,7 +57,7 @@ export const apiSlice = createApi({
       providesTags: ['Movies'],
     }),
     
-    searchContent: builder.query<any[], { query: string; type: 'news' | 'movies' | 'all' }>({
+    searchContent: builder.query<any, { query: string; type: 'news' | 'movies' | 'all' }>({
       query: ({ query, type }) => {
         if (type === 'news') {
           return `https://newsapi.org/v2/everything?q=${query}&apiKey=${import.meta.env.VITE_NEWS_API_KEY}`;

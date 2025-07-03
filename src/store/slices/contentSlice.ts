@@ -1,7 +1,7 @@
 
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-interface ContentItem {
+export interface ContentItem {
   id: string;
   title: string;
   description: string;
