@@ -10,7 +10,6 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { store, persistor } from './store';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
-import Navigation from './components/Navigation';
 import './i18n';
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
@@ -31,7 +30,6 @@ const App = () => (
                 <Route path="/auth" element={<Auth />} />
                 <Route path="/" element={
                   <ProtectedRoute>
-                    <Navigation />
                     <Index />
                   </ProtectedRoute>
                 } />
