@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
@@ -10,6 +9,7 @@ import { resetContent } from '../store/slices/contentSlice';
 import EnhancedSidebar from './EnhancedSidebar';
 import SearchBar from './SearchBar';
 import InfiniteScrollContent from './InfiniteScrollContent';
+import Navigation from './Navigation';
 
 const EnhancedDashboard: React.FC = () => {
   const { t } = useTranslation();
