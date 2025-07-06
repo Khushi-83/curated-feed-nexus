@@ -4,21 +4,21 @@ import { persistStore, persistReducer } from 'redux-persist';
 import storage from 'redux-persist/lib/storage';
 import { combineReducers } from '@reduxjs/toolkit';
 import { apiSlice } from './api/apiSlice';
-import userPreferencesReducer from './slices/userPreferencesSlice';
-import contentReducer from './slices/contentSlice';
-import uiReducer from './slices/uiSlice';
+import contentSlice from './slices/contentSlice';
+import uiSlice from './slices/uiSlice';
+import userPreferencesSlice from './slices/userPreferencesSlice';
 
 const persistConfig = {
   key: 'root',
   storage,
-  whitelist: ['userPreferences', 'ui'],
+  whitelist: ['content', 'ui', 'userPreferences'],
 };
 
 const rootReducer = combineReducers({
-  [apiSlice.reducerPath]: apiSlice.reducer,
-  userPreferences: userPreferencesReducer,
-  content: contentReducer,
-  ui: uiReducer,
+  api: apiSlice.reducer,
+  content: contentSlice,
+  ui: uiSlice,
+  userPreferences: userPreferencesSlice,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -31,7 +31,6 @@ export const store = configureStore({
         ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
       },
     }).concat(apiSlice.middleware),
-  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export const persistor = persistStore(store);
