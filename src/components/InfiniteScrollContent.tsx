@@ -26,21 +26,21 @@ const InfiniteScrollContent: React.FC = () => {
     dispatch(setLoading(true));
     
     // Simulate API delay
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise(resolve => setTimeout(resolve, 800));
     
     // Generate new mock content with different IDs
     const newContent = mockContentData.map((item, index) => ({
       ...item,
       id: `${item.id}-page-${currentPage}-${index}`,
-      title: `${item.title} (Page ${currentPage})`,
+      title: currentPage === 1 ? item.title : `${item.title} (Page ${currentPage})`,
     }));
     
     dispatch(appendContent(newContent));
     dispatch(incrementPage());
     dispatch(setLoading(false));
     
-    // Stop loading more after 5 pages for demo purposes
-    if (currentPage >= 5) {
+    // Stop loading more after 3 pages for demo purposes
+    if (currentPage >= 3) {
       // In a real app, you'd set hasMore based on API response
     }
   }, [loading, hasMore, dispatch, currentPage]);
@@ -79,9 +79,10 @@ const InfiniteScrollContent: React.FC = () => {
           <div
             {...provided.droppableProps}
             ref={provided.innerRef}
-            className="space-y-6"
+            className="space-y-8"
           >
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {/* Main Content Grid - Tighter Layout */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {items.map((item, index) => (
                 <DraggableContentCard
                   key={item.id}
@@ -94,22 +95,36 @@ const InfiniteScrollContent: React.FC = () => {
             </div>
             {provided.placeholder}
             
-            {/* Load more trigger - positioned at the bottom */}
-            <div ref={loadMoreRef} className="flex items-center justify-center py-8">
+            {/* Load more trigger */}
+            <div ref={loadMoreRef} className="flex items-center justify-center py-12">
               {loading && (
-                <div className="flex items-center space-x-2">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="flex items-center space-x-3"
+                >
                   <motion.div
                     animate={{ rotate: 360 }}
                     transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
-                    className="w-6 h-6 border-2 border-blue-500 border-t-transparent rounded-full"
+                    className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full"
                   />
-                  <span className="text-gray-600 dark:text-gray-400">Loading more content...</span>
-                </div>
+                  <span className="text-gray-600 dark:text-gray-400 font-medium">Loading more amazing content...</span>
+                </motion.div>
               )}
               {!hasMore && items.length > 0 && (
-                <div className="text-center text-gray-500 dark:text-gray-400">
-                  <p>You've reached the end of the content</p>
-                </div>
+                <motion.div
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  className="text-center"
+                >
+                  <div className="text-6xl mb-4">🎉</div>
+                  <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                    You've explored everything!
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400">
+                    Come back later for fresh content
+                  </p>
+                </motion.div>
               )}
             </div>
           </div>

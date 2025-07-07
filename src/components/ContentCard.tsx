@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Heart, ExternalLink, Play, Clock, Tag } from 'lucide-react';
+import { Heart, ExternalLink, Play, Clock, Tag, TrendingUp } from 'lucide-react';
 
 interface ContentItem {
   id: string;
@@ -29,6 +29,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   index
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
 
   const getTypeIcon = () => {
     switch (content.type) {
@@ -42,98 +43,121 @@ const ContentCard: React.FC<ContentCardProps> = ({
 
   const getTypeColor = () => {
     switch (content.type) {
-      case 'news': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200';
-      case 'movie': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';
-      case 'music': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200';
-      case 'social': return 'bg-pink-100 text-pink-800 dark:bg-pink-900 dark:text-pink-200';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200';
+      case 'news': return 'bg-gradient-to-r from-blue-500 to-blue-600 text-white';
+      case 'movie': return 'bg-gradient-to-r from-purple-500 to-purple-600 text-white';
+      case 'music': return 'bg-gradient-to-r from-green-500 to-green-600 text-white';
+      case 'social': return 'bg-gradient-to-r from-pink-500 to-pink-600 text-white';
+      default: return 'bg-gradient-to-r from-gray-500 to-gray-600 text-white';
+    }
+  };
+
+  const getCategoryGradient = () => {
+    switch (content.category) {
+      case 'Technology': return 'from-cyan-400 to-blue-500';
+      case 'Movies': return 'from-purple-400 to-pink-500';
+      case 'Sports': return 'from-orange-400 to-red-500';
+      case 'Music': return 'from-green-400 to-teal-500';
+      case 'Gaming': return 'from-indigo-400 to-purple-500';
+      case 'Food': return 'from-yellow-400 to-orange-500';
+      case 'Travel': return 'from-emerald-400 to-cyan-500';
+      default: return 'from-gray-400 to-gray-500';
     }
   };
 
   const getActionText = () => {
     switch (content.type) {
       case 'movie': return 'Watch Now';
-      case 'music': return 'Play Now';
+      case 'music': return 'Listen Now';
       default: return 'Read More';
     }
   };
 
   return (
     <div 
-      className="group bg-white dark:bg-slate-800 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-slate-200 dark:border-slate-700 animate-fade-in"
-      style={{ animationDelay: `${index * 100}ms` }}
+      className="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-slate-200 dark:border-slate-700 animate-fade-in transform hover:scale-[1.02]"
+      style={{ animationDelay: `${index * 50}ms` }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
-      {/* Image */}
-      <div className="relative h-48 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600">
-        <img
-          src={content.imageUrl}
-          alt={content.title}
-          className={`w-full h-full object-cover transition-opacity duration-300 ${imageLoaded ? 'opacity-100' : 'opacity-0'}`}
-          onLoad={() => setImageLoaded(true)}
-          onError={() => setImageLoaded(true)}
-        />
-        {!imageLoaded && (
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="animate-pulse text-gray-400">Loading...</div>
-          </div>
-        )}
-        
-        {/* Overlay */}
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-        
-        {/* Trending Badge */}
-        {content.trending && (
-          <div className="absolute top-3 left-3 bg-gradient-to-r from-orange-400 to-red-500 text-white px-2 py-1 rounded-full text-xs font-medium flex items-center space-x-1">
-            <span>🔥</span>
-            <span>Trending</span>
-          </div>
-        )}
-
-        {/* Favorite Button */}
-        <button
-          onClick={() => onToggleFavorite(content.id)}
-          className="absolute top-3 right-3 p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-200"
-        >
-          <Heart 
-            className={`h-4 w-4 transition-colors duration-200 ${
-              isFavorite ? 'text-red-500 fill-red-500' : 'text-white'
-            }`}
+      {/* Gradient Border Effect */}
+      <div className={`absolute inset-0 bg-gradient-to-r ${getCategoryGradient()} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-2xl`} />
+      <div className="absolute inset-0.5 bg-white dark:bg-slate-800 rounded-2xl" />
+      
+      {/* Content Container */}
+      <div className="relative z-10">
+        {/* Image Section */}
+        <div className="relative h-52 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 rounded-t-2xl overflow-hidden">
+          <img
+            src={content.imageUrl}
+            alt={content.title}
+            className={`w-full h-full object-cover transition-all duration-500 ${
+              imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
+            } ${isHovered ? 'scale-110' : 'scale-100'}`}
+            onLoad={() => setImageLoaded(true)}
+            onError={() => setImageLoaded(true)}
           />
-        </button>
-      </div>
+          {!imageLoaded && (
+            <div className="absolute inset-0 flex items-center justify-center">
+              <div className="animate-pulse text-gray-400">Loading...</div>
+            </div>
+          )}
+          
+          {/* Gradient Overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+          
+          {/* Trending Badge */}
+          {content.trending && (
+            <div className="absolute top-4 left-4 bg-gradient-to-r from-orange-500 to-red-500 text-white px-3 py-1.5 rounded-full text-xs font-semibold flex items-center space-x-1.5 shadow-lg backdrop-blur-sm">
+              <TrendingUp className="h-3 w-3" />
+              <span>Trending</span>
+            </div>
+          )}
 
-      {/* Content */}
-      <div className="p-5">
-        {/* Header */}
-        <div className="flex items-center justify-between mb-3">
-          <span className={`px-2 py-1 rounded-full text-xs font-medium ${getTypeColor()}`}>
+          {/* Favorite Button */}
+          <button
+            onClick={() => onToggleFavorite(content.id)}
+            className="absolute top-4 right-4 p-2.5 rounded-full bg-white/20 backdrop-blur-md hover:bg-white/30 transition-all duration-200 shadow-lg"
+          >
+            <Heart 
+              className={`h-4 w-4 transition-all duration-200 ${
+                isFavorite ? 'text-red-500 fill-red-500 scale-110' : 'text-white hover:text-red-300'
+              }`}
+            />
+          </button>
+
+          {/* Type Badge */}
+          <div className={`absolute bottom-4 left-4 px-3 py-1 rounded-full text-xs font-medium ${getTypeColor()} shadow-lg`}>
             {content.category}
-          </span>
-          <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
-            <Clock className="h-3 w-3" />
-            <span>{content.readTime || '5 min read'}</span>
           </div>
         </div>
 
-        {/* Title */}
-        <h3 className="font-semibold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors duration-200">
-          {content.title}
-        </h3>
+        {/* Content Section */}
+        <div className="p-6">
+          {/* Header with Read Time */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2 text-xs text-gray-500 dark:text-gray-400">
+              <Clock className="h-3 w-3" />
+              <span>{content.readTime || '5 min read'}</span>
+            </div>
+            <span className="text-xs text-gray-500 dark:text-gray-400">
+              {new Date(content.publishedAt).toLocaleDateString()}
+            </span>
+          </div>
 
-        {/* Description */}
-        <p className="text-gray-600 dark:text-gray-400 text-sm mb-4 line-clamp-3">
-          {content.description}
-        </p>
+          {/* Title */}
+          <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-transparent group-hover:bg-clip-text group-hover:bg-gradient-to-r group-hover:from-blue-600 group-hover:to-purple-600 transition-all duration-300">
+            {content.title}
+          </h3>
 
-        {/* Footer */}
-        <div className="flex items-center justify-between">
-          <span className="text-xs text-gray-500 dark:text-gray-400">
-            {new Date(content.publishedAt).toLocaleDateString()}
-          </span>
-          
+          {/* Description */}
+          <p className="text-gray-600 dark:text-gray-400 text-sm mb-5 line-clamp-3 leading-relaxed">
+            {content.description}
+          </p>
+
+          {/* Action Button */}
           <button 
             onClick={() => window.open(content.url, '_blank')}
-            className="flex items-center space-x-2 px-3 py-1.5 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-full text-xs font-medium hover:shadow-lg transform hover:scale-105 transition-all duration-200"
+            className={`w-full flex items-center justify-center space-x-2 px-4 py-3 bg-gradient-to-r ${getCategoryGradient()} text-white rounded-xl text-sm font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-200 shadow-md`}
           >
             {getTypeIcon()}
             <span>{getActionText()}</span>
