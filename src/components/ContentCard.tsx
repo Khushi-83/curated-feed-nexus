@@ -29,6 +29,7 @@ const ContentCard: React.FC<ContentCardProps> = ({
   index
 }) => {
   const [imageLoaded, setImageLoaded] = useState(false);
+  const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
 
   const getTypeIcon = () => {
@@ -72,6 +73,26 @@ const ContentCard: React.FC<ContentCardProps> = ({
     }
   };
 
+  // Enhanced image URL with better fallback
+  const getImageUrl = () => {
+    if (imageError || !content.imageUrl) {
+      // Use a more reliable placeholder service
+      return `https://images.unsplash.com/photo-1518770660439-4636190af475?w=400&h=300&fit=crop&auto=format`;
+    }
+    return content.imageUrl;
+  };
+
+  const handleImageError = () => {
+    console.log('Image failed to load:', content.imageUrl);
+    setImageError(true);
+    setImageLoaded(true);
+  };
+
+  const handleImageLoad = () => {
+    console.log('Image loaded successfully:', content.imageUrl);
+    setImageLoaded(true);
+  };
+
   return (
     <div 
       className="group relative bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-slate-200 dark:border-slate-700 animate-fade-in transform hover:scale-[1.02]"
@@ -88,17 +109,18 @@ const ContentCard: React.FC<ContentCardProps> = ({
         {/* Image Section */}
         <div className="relative h-52 bg-gradient-to-br from-gray-200 to-gray-300 dark:from-slate-700 dark:to-slate-600 rounded-t-2xl overflow-hidden">
           <img
-            src={content.imageUrl}
+            src={getImageUrl()}
             alt={content.title}
             className={`w-full h-full object-cover transition-all duration-500 ${
               imageLoaded ? 'opacity-100 scale-100' : 'opacity-0 scale-105'
             } ${isHovered ? 'scale-110' : 'scale-100'}`}
-            onLoad={() => setImageLoaded(true)}
-            onError={() => setImageLoaded(true)}
+            onLoad={handleImageLoad}
+            onError={handleImageError}
+            loading="lazy"
           />
           {!imageLoaded && (
-            <div className="absolute inset-0 flex items-center justify-center">
-              <div className="animate-pulse text-gray-400">Loading...</div>
+            <div className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200 dark:from-slate-700 dark:to-slate-600">
+              <div className="animate-pulse text-gray-400 dark:text-gray-500 text-sm">Loading image...</div>
             </div>
           )}
           

@@ -38,6 +38,7 @@ export const store = configureStore({
         ],
       },
     }).concat(apiSlice.middleware),
+  devTools: process.env.NODE_ENV !== 'production',
 });
 
 export const persistor = persistStore(store);
