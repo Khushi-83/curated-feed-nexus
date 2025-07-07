@@ -13,12 +13,55 @@ import { mockContentData } from '../data/mockData';
 const InfiniteScrollContent: React.FC = () => {
   const dispatch = useDispatch();
   const { items, hasMore, loading, currentPage } = useSelector((state: RootState) => state.content);
-  const { favoriteItems } = useSelector((state: RootState) => state.userPreferences);
+  const { favoriteItems, categories } = useSelector((state: RootState) => state.userPreferences);
+  const { activeSection } = useSelector((state: RootState) => state.ui);
   
   const { ref: loadMoreRef, inView } = useInView({
     threshold: 0.1,
     triggerOnce: false,
   });
+
+  // Category mapping to match user selections with data categories
+  const categoryMapping: { [key: string]: string[] } = {
+    'Technology': ['tech', 'technology'],
+    'Sports': ['sports', 'sport'],
+    'Music': ['music', 'entertainment'],
+    'Movies': ['movies', 'entertainment', 'movie'],
+    'News': ['news', 'politics'],
+    'Gaming': ['gaming', 'games'],
+    'Food': ['food', 'cooking'],
+    'Travel': ['travel', 'lifestyle']
+  };
+
+  const getFilteredContent = useCallback(() => {
+    let filteredItems = items;
+
+    switch (activeSection) {
+      case 'favorites':
+        filteredItems = items.filter(item => favoriteItems.includes(item.id));
+        break;
+      case 'trending':
+        filteredItems = items.filter(item => item.trending);
+        break;
+      default:
+        if (categories.length > 0) {
+          // Get all mapped category values for selected categories
+          const mappedCategories = categories.flatMap(category => 
+            categoryMapping[category] || [category.toLowerCase()]
+          );
+          
+          filteredItems = items.filter(item => {
+            const itemCategory = item.category.toLowerCase();
+            return mappedCategories.some(cat => 
+              itemCategory.includes(cat) || cat.includes(itemCategory)
+            );
+          });
+        }
+        break;
+    }
+
+    return filteredItems;
+  }, [items, favoriteItems, categories, activeSection]);
 
   const loadMoreContent = useCallback(async () => {
     if (loading || !hasMore) return;
@@ -72,6 +115,8 @@ const InfiniteScrollContent: React.FC = () => {
     dispatch(toggleFavorite(id));
   };
 
+  const filteredContent = getFilteredContent();
+
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
       <Droppable droppableId="content-list">
@@ -88,7 +133,7 @@ const InfiniteScrollContent: React.FC = () => {
               transition={{ staggerChildren: 0.1 }}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-6"
             >
-              {items.map((item, index) => (
+              {filteredContent.map((item, index) => (
                 <motion.div
                   key={item.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -105,6 +150,23 @@ const InfiniteScrollContent: React.FC = () => {
               ))}
             </motion.div>
             {provided.placeholder}
+            
+            {/* Show message when no filtered content */}
+            {filteredContent.length === 0 && !loading && items.length > 0 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="text-center bg-white dark:bg-slate-800 rounded-3xl p-12 shadow-xl border border-slate-200 dark:border-slate-700"
+              >
+                <div className="text-6xl mb-6">🔍</div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3">
+                  No content found
+                </h3>
+                <p className="text-gray-600 dark:text-gray-400 mb-6">
+                  Try adjusting your filters or check back later for new content
+                </p>
+              </motion.div>
+            )}
             
             {/* Enhanced Load More Section */}
             <div ref={loadMoreRef} className="flex items-center justify-center py-16">
@@ -132,7 +194,7 @@ const InfiniteScrollContent: React.FC = () => {
                   </div>
                 </motion.div>
               )}
-              {!hasMore && items.length > 0 && (
+              {!hasMore && items.length > 0 && filteredContent.length > 0 && (
                 <motion.div
                   initial={{ opacity: 0, scale: 0.9 }}
                   animate={{ opacity: 1, scale: 1 }}

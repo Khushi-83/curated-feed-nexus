@@ -33,16 +33,52 @@ const EnhancedDashboard: React.FC = () => {
     }
   }, [darkMode]);
 
+  // Category mapping to match user selections with data categories
+  const categoryMapping: { [key: string]: string[] } = {
+    'Technology': ['tech', 'technology'],
+    'Sports': ['sports', 'sport'],
+    'Music': ['music', 'entertainment'],
+    'Movies': ['movies', 'entertainment', 'movie'],
+    'News': ['news', 'politics'],
+    'Gaming': ['gaming', 'games'],
+    'Food': ['food', 'cooking'],
+    'Travel': ['travel', 'lifestyle']
+  };
+
   const getFilteredContent = () => {
+    console.log('Active section:', activeSection);
+    console.log('Selected categories:', categories);
+    console.log('All items:', items.length);
+    
     switch (activeSection) {
       case 'favorites':
-        return items.filter(item => favoriteItems.includes(item.id));
+        const favoriteContent = items.filter(item => favoriteItems.includes(item.id));
+        console.log('Favorite items:', favoriteContent.length);
+        return favoriteContent;
       case 'trending':
-        return items.filter(item => item.trending);
+        const trendingContent = items.filter(item => item.trending);
+        console.log('Trending items:', trendingContent.length);
+        return trendingContent;
       default:
-        return categories.length > 0 
-          ? items.filter(item => categories.includes(item.category))
-          : items;
+        if (categories.length > 0) {
+          // Get all mapped category values for selected categories
+          const mappedCategories = categories.flatMap(category => 
+            categoryMapping[category] || [category.toLowerCase()]
+          );
+          console.log('Mapped categories:', mappedCategories);
+          
+          const filteredContent = items.filter(item => {
+            const itemCategory = item.category.toLowerCase();
+            const matches = mappedCategories.some(cat => 
+              itemCategory.includes(cat) || cat.includes(itemCategory)
+            );
+            return matches;
+          });
+          console.log('Filtered items:', filteredContent.length);
+          return filteredContent;
+        }
+        console.log('No filters, returning all items:', items.length);
+        return items;
     }
   };
 
@@ -218,6 +254,11 @@ const EnhancedDashboard: React.FC = () => {
                       <>
                         <Activity className="h-4 w-4 mr-2" />
                         {filteredContent.length} items available
+                        {categories.length > 0 && (
+                          <span className="ml-2 text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full">
+                            Filtered by: {categories.join(', ')}
+                          </span>
+                        )}
                       </>
                     )}
                   </p>
@@ -229,12 +270,13 @@ const EnhancedDashboard: React.FC = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-500 text-white rounded-xl font-medium shadow-lg hover:shadow-xl transition-all duration-200"
+                    onClick={() => dispatch(resetContent())}
                   >
                     Refresh
                   </motion.button>
                 </div>
               </div>
-            </motion.div>
+            </div>
 
             {/* Content with Infinite Scroll */}
             <InfiniteScrollContent />
