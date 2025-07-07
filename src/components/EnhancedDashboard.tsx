@@ -276,7 +276,7 @@ const EnhancedDashboard: React.FC = () => {
                   </motion.button>
                 </div>
               </div>
-            </div>
+            </motion.div>
 
             {/* Content with Infinite Scroll */}
             <InfiniteScrollContent />
