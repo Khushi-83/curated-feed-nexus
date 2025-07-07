@@ -36,8 +36,6 @@ export const store = configureStore({
           'persist/FLUSH',
           'persist/PAUSE',
         ],
-        ignoredActionsPaths: ['meta.arg', 'payload.timestamp'],
-        ignoredPaths: ['_persist'],
       },
     }).concat(apiSlice.middleware),
 });
