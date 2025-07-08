@@ -1,73 +1,90 @@
-# Welcome to your Lovable project
+# 🌐 Curated Feed Nexus
 
-## Project info
+A personalized, dynamic dashboard built with **React**, **Next.js**, and **TypeScript** to fetch and display real-time content from multiple sources—news, movies/music, and social posts—based on user preferences.
 
-**URL**: https://lovable.dev/projects/a720e3d0-806a-416e-af11-eb15175ba5e8
+![Curated Feed Banner](https://your-banner-image-url) <!-- Optional: Insert banner image if available -->
 
-## How can I edit this code?
+---
 
-There are several ways of editing your application.
+## 🚀 Project Overview
 
-**Use Lovable**
+**Curated Feed Nexus** is an all-in-one content aggregator platform offering:
+- 📰 Latest news tailored to your interests
+- 🎬 Movie/music recommendations
+- 📸 Social posts via mock APIs
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/a720e3d0-806a-416e-af11-eb15175ba5e8) and start prompting.
+It features **drag-and-drop reordering**, **dark mode**, **debounced search**, and a modern, responsive layout.
 
-Changes made via Lovable will be committed automatically to this repo.
+---
 
-**Use your preferred IDE**
+## ✨ Features
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### 🎛 User Preferences
+- Choose categories like **technology**, **sports**, or **finance**
+- Preferences saved using **Redux + localStorage**
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### 🔗 Unified Feed
+- **News:** via NewsAPI
+- **Recommendations:** via TMDB/Spotify API
+- **Social Posts:** via mock API (e.g., Twitter/Instagram)
 
-Follow these steps:
+### 🧩 UI Highlights
+- Infinite scrolling / pagination
+- Drag-and-drop using **React DnD** or **Framer Motion**
+- Responsive cards with media, headlines, and CTAs
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+### 🔍 Search & Filter
+- Global search with **debounced input**
+- Real-time filtering across all categories
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+### 🌗 Dark Mode + Animations
+- Toggle light/dark using **Tailwind + CSS vars**
+- Smooth transitions with **Framer Motion**
 
-# Step 3: Install the necessary dependencies.
-npm i
+### ❤️ Favorites Section
+- Mark any content as a favorite
+- Access them via dedicated sidebar section
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
-```
+---
 
-**Edit a file directly in GitHub**
+## 🏗️ Tech Stack
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+| Category         | Tools/Tech Used                                     |
+|------------------|------------------------------------------------------|
+| Frontend         | React, Next.js, TypeScript                           |
+| State Management | Redux Toolkit, RTK Query, Redux Persist              |
+| Styling          | Tailwind CSS, CSS Variables                          |
+| Animation        | Framer Motion                                        |
+| APIs             | NewsAPI, TMDB / Spotify (for recommendations)        |
+| Testing          | Jest, React Testing Library, Cypress/Playwright      |
 
-**Use GitHub Codespaces**
+---
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## 🗂️ Project Structure
 
-## What technologies are used for this project?
-
-This project is built with:
-
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
-
-## How can I deploy this project?
-
-Simply open [Lovable](https://lovable.dev/projects/a720e3d0-806a-416e-af11-eb15175ba5e8) and click on Share -> Publish.
-
-## Can I connect a custom domain to my Lovable project?
-
-Yes, you can!
-
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
-
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+```bash
+/src
+  /components
+    Header.tsx
+    Sidebar.tsx
+    ContentCard.tsx
+    Feed.tsx
+    SearchBar.tsx
+    ThemeToggle.tsx
+  /features
+    /preferences
+      preferencesSlice.ts
+    /content
+      contentApi.ts
+      contentSlice.ts
+  /pages
+    _app.tsx
+    index.tsx
+    settings.tsx
+  /styles
+    globals.css
+    tailwind.config.js
+  /tests
+    /unit
+    /integration
+    /e2e
