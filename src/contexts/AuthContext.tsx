@@ -36,9 +36,9 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         setUser(session?.user ?? null);
         setLoading(false);
         
-        // Redirect authenticated users to dashboard
-        if (event === 'SIGNED_IN' && session?.user) {
-          console.log('User signed in, redirecting to dashboard');
+        // Only redirect on initial sign in from auth page, not on every auth state change
+        if (event === 'SIGNED_IN' && session?.user && window.location.pathname === '/auth') {
+          console.log('User signed in from auth page, redirecting to dashboard');
           setTimeout(() => {
             window.location.href = '/';
           }, 100);
