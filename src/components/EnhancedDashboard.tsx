@@ -34,18 +34,6 @@ const EnhancedDashboard: React.FC = () => {
     }
   }, [darkMode]);
 
-  // Category mapping to match user selections with data categories
-  const categoryMapping: { [key: string]: string[] } = {
-    'Technology': ['tech', 'technology'],
-    'Sports': ['sports', 'sport'],
-    'Music': ['music', 'entertainment'],
-    'Movies': ['movies', 'entertainment', 'movie'],
-    'News': ['news', 'politics'],
-    'Gaming': ['gaming', 'games'],
-    'Food': ['food', 'cooking'],
-    'Travel': ['travel', 'lifestyle']
-  };
-
   const getFilteredContent = () => {
     console.log('Active section:', activeSection);
     console.log('Selected categories:', categories);
@@ -61,25 +49,22 @@ const EnhancedDashboard: React.FC = () => {
         console.log('Trending items:', trendingContent.length);
         return trendingContent;
       default:
-        if (categories.length > 0) {
-          // Get all mapped category values for selected categories
-          const mappedCategories = categories.flatMap(category => 
-            categoryMapping[category] || [category.toLowerCase()]
-          );
-          console.log('Mapped categories:', mappedCategories);
-          
-          const filteredContent = items.filter(item => {
-            const itemCategory = item.category.toLowerCase();
-            const matches = mappedCategories.some(cat => 
-              itemCategory.includes(cat) || cat.includes(itemCategory)
-            );
-            return matches;
-          });
-          console.log('Filtered items:', filteredContent.length);
-          return filteredContent;
+        // Show all content if no categories are selected
+        if (categories.length === 0) {
+          console.log('No categories selected, showing all items:', items.length);
+          return items;
         }
-        console.log('No filters, returning all items:', items.length);
-        return items;
+        
+        // Filter by selected categories
+        const filteredContent = items.filter(item => {
+          const itemCategory = item.category.toLowerCase();
+          return categories.some(selectedCategory => 
+            itemCategory.includes(selectedCategory.toLowerCase()) || 
+            selectedCategory.toLowerCase().includes(itemCategory)
+          );
+        });
+        console.log('Filtered items:', filteredContent.length);
+        return filteredContent;
     }
   };
 
