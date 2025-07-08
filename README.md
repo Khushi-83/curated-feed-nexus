@@ -88,3 +88,16 @@ It features **drag-and-drop reordering**, **dark mode**, **debounced search**, a
     /unit
     /integration
     /e2e
+
+```
+
+
+## 🛠️ Getting Started
+
+### 🔧 Installation
+
+```bash
+git clone https://github.com/Khushi-83/curated-feed-nexus.git
+npm install
+```
+
