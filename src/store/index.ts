@@ -28,9 +28,17 @@ export const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {
-        ignoredActions: ['persist/PERSIST', 'persist/REHYDRATE'],
+        ignoredActions: [
+          'persist/PERSIST',
+          'persist/REHYDRATE', 
+          'persist/REGISTER',
+          'persist/PURGE',
+          'persist/FLUSH',
+          'persist/PAUSE',
+        ],
+        ignoredPaths: ['_persist'],
       },
-    }).concat(apiSlice.middleware),
+    }).concat(apiSlice.middleware) as any,
 });
 
 export const persistor = persistStore(store);
