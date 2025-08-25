@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -11,20 +10,12 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { LogOut, User } from 'lucide-react';
+import { User } from 'lucide-react';
 
 const Navigation = () => {
-  const { user, signOut } = useAuth();
-
-  const handleSignOut = () => {
-    signOut();
-  };
-
-  if (!user) return null;
-
-  // Get username from user metadata, fallback to email
-  const displayName = user.user_metadata?.username || user.email;
-  const initials = displayName ? displayName.charAt(0).toUpperCase() : 'U';
+  // For now, we'll show a simple user menu without authentication
+  const displayName = "Guest User";
+  const initials = "G";
 
   return (
     <DropdownMenu>
@@ -42,14 +33,14 @@ const Navigation = () => {
           <div className="flex flex-col space-y-1">
             <p className="text-sm font-medium leading-none">{displayName}</p>
             <p className="text-xs leading-none text-muted-foreground">
-              ID: {user.id.slice(0, 8)}...
+              Demo Mode
             </p>
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={handleSignOut}>
-          <LogOut className="mr-2 h-4 w-4" />
-          <span>Sign out</span>
+        <DropdownMenuItem>
+          <User className="mr-2 h-4 w-4" />
+          <span>Profile</span>
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
